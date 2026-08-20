@@ -1,6 +1,6 @@
 use std::{
     io::SeekFrom,
-    path::{Path, PathBuf},
+    path::PathBuf,
     sync::Arc,
 };
 
@@ -215,7 +215,7 @@ fn parse_range(value: &str, total: u64) -> ApiResult<(u64, u64, StatusCode)> {
 }
 
 async fn frontend(uri: axum::http::Uri) -> Response {
-    let requested = uri.path().trim_start('/');
+    let requested = uri.path().trim_start_matches('/');
     let path = if requested.is_empty() { "index.html" } else { requested };
     let asset = Frontend::get(path).or_else(|| Frontend::get("index.html"));
 
