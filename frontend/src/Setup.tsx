@@ -81,6 +81,7 @@ export function Setup({ status, onReady, onCancel }: SetupProps) {
             {busy ? '正在准备…' : '打开 LocalFlow'}
           </button>
         </div>
+        <p class="font-notice">界面使用 HarmonyOS Sans 字体 · <a href="/fonts/LICENSE_Fonts" target="_blank" rel="noreferrer">字体许可</a></p>
       </main>
     </div>
   );

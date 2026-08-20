@@ -5,9 +5,10 @@ import type { CatalogEntry } from './types';
 
 interface MediaFeedProps {
   entries: CatalogEntry[];
+  layout: 'feed' | 'masonry';
 }
 
-export function MediaFeed({ entries }: MediaFeedProps) {
+export function MediaFeed({ entries, layout }: MediaFeedProps) {
   const [center, setCenter] = useState(0);
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
   const heights = useRef(new Map<string, number>());
@@ -38,7 +39,7 @@ export function MediaFeed({ entries }: MediaFeedProps) {
 
     shells.forEach(shell => observer.observe(shell));
     return () => observer.disconnect();
-  }, [entries]);
+  }, [entries, layout]);
 
   if (!entries.length) {
     return <div class="empty-state"><span>◇</span><p>这个文件夹暂时没有图片或视频</p></div>;
@@ -51,15 +52,16 @@ export function MediaFeed({ entries }: MediaFeedProps) {
 
   return (
     <>
-      <div class="media-feed">
+      <div class={`media-feed ${layout === 'masonry' ? 'is-masonry' : 'is-feed'}`}>
         {entries.map((entry, index) => (
           <WindowedItem
             key={entry.path}
             entry={entry}
             index={index}
             active={Math.abs(index - center) <= 10}
-            storedHeight={heights.current.get(entry.path)}
-            onHeight={height => heights.current.set(entry.path, height)}
+            storedHeight={heights.current.get(`${layout}:${entry.path}`)}
+            placeholderHeight={layout === 'masonry' ? 340 : 540}
+            onHeight={height => heights.current.set(`${layout}:${entry.path}`, height)}
             onImage={() => openImage(entry)}
           />
         ))}
@@ -76,11 +78,12 @@ interface WindowedItemProps {
   index: number;
   active: boolean;
   storedHeight?: number;
+  placeholderHeight: number;
   onHeight: (height: number) => void;
   onImage: () => void;
 }
 
-function WindowedItem({ entry, index, active, storedHeight, onHeight, onImage }: WindowedItemProps) {
+function WindowedItem({ entry, index, active, storedHeight, placeholderHeight, onHeight, onImage }: WindowedItemProps) {
   const ref = useRef<HTMLDivElement>(null);
 
   useLayoutEffect(() => {
@@ -99,7 +102,7 @@ function WindowedItem({ entry, index, active, storedHeight, onHeight, onImage }:
       ref={ref}
       class={`media-shell${active ? ' is-mounted' : ' is-placeholder'}`}
       data-index={index}
-      style={!active ? { height: `${storedHeight || 540}px` } : undefined}
+      style={!active ? { height: `${storedHeight || placeholderHeight}px` } : undefined}
     >
       {active && <MediaCard entry={entry} onImage={onImage} />}
     </article>

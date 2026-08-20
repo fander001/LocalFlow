@@ -122,6 +122,10 @@ export function App() {
           </section>
 
           <LibraryContent data={data} search={search} onFolder={path => loadFolder(path, true)} />
+          <footer class="app-footer">
+            <span>LocalFlow · 本地运行</span>
+            <span>界面使用 HarmonyOS Sans · <a href="/fonts/LICENSE_Fonts" target="_blank" rel="noreferrer">字体许可</a></span>
+          </footer>
         </main>
       )}
 
@@ -132,6 +136,9 @@ export function App() {
 }
 
 function LibraryContent({ data, search, onFolder }: { data: FolderData; search: string; onFolder: (path: string) => void }) {
+  const [layout, setLayout] = useState<'feed' | 'masonry'>(() =>
+    localStorage.getItem('localflow-media-layout') === 'masonry' ? 'masonry' : 'feed'
+  );
   const normalized = search.trim().toLocaleLowerCase('zh-CN');
   const filter = (entry: CatalogEntry) => !normalized || entry.name.toLocaleLowerCase('zh-CN').includes(normalized);
   const folders = useMemo(() => data.folders.filter(filter), [data.folders, normalized]);
@@ -141,9 +148,12 @@ function LibraryContent({ data, search, onFolder }: { data: FolderData; search: 
   return (
     <>
       {folders.length > 0 && (
-        <section class="section-block">
+        <section class="section-block folder-zone">
           <div class="section-title">
-            <h2>{data.mode === 'navigation' ? '继续选择目录' : '子文件夹'}</h2>
+            <div>
+              <p>FOLDERS</p>
+              <h2>{data.mode === 'navigation' ? '继续选择目录' : '子文件夹'}</h2>
+            </div>
             <span>{folders.length}</span>
           </div>
           <div class="folder-grid">
@@ -153,12 +163,35 @@ function LibraryContent({ data, search, onFolder }: { data: FolderData; search: 
       )}
 
       {(media.length > 0 || data.mode === 'feed' || (data.mode === 'navigation' && data.media.length > 0)) && (
-        <section class="section-block feed-block">
+        <section class={`section-block feed-block layout-${layout}`}>
           <div class="section-title">
-            <h2>{data.mode === 'navigation' ? '本层媒体' : '媒体流'}</h2>
+            <div>
+              <p>MEDIA</p>
+              <h2>{data.mode === 'navigation' ? '本层媒体' : layout === 'feed' ? '媒体流' : '瀑布流'}</h2>
+            </div>
             <span>{media.length}</span>
+            {media.length > 0 && (
+              <div class="layout-toggle" role="group" aria-label="媒体布局">
+                <button
+                  class={layout === 'feed' ? 'active' : ''}
+                  onClick={() => {
+                    setLayout('feed');
+                    localStorage.setItem('localflow-media-layout', 'feed');
+                  }}
+                  aria-pressed={layout === 'feed'}
+                ><b>▤</b> 信息流</button>
+                <button
+                  class={layout === 'masonry' ? 'active' : ''}
+                  onClick={() => {
+                    setLayout('masonry');
+                    localStorage.setItem('localflow-media-layout', 'masonry');
+                  }}
+                  aria-pressed={layout === 'masonry'}
+                ><b>▦</b> 瀑布流</button>
+              </div>
+            )}
           </div>
-          <MediaFeed entries={media} />
+          <MediaFeed entries={media} layout={layout} />
         </section>
       )}
 
