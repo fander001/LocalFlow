@@ -1,0 +1,10 @@
+/target/
+/frontend/node_modules/
+/frontend/dist/*
+!/frontend/dist/.gitkeep
+/artifacts/
+*.log
+*.tmp
+*.zip
+.idea/
+.vscode/
