@@ -189,7 +189,7 @@ button:focus-visible, input:focus-visible, a:focus-visible { outline: 2px solid 
 .feed-block { max-width: 920px; margin-left: auto; margin-right: auto; }
 .feed-block.layout-masonry { max-width: 1380px; }
 .media-feed { display: grid; gap: 22px; }
-.media-feed.is-masonry { display: block; columns: 3 280px; column-gap: 16px; }
+.media-feed.is-masonry { display: block; columns: 3; column-gap: 16px; }
 .media-feed.is-masonry .media-shell { display: inline-block; width: 100%; margin: 0 0 16px; break-inside: avoid; vertical-align: top; }
 .media-feed.is-masonry .media-card { border-radius: 17px; }
 .media-feed.is-masonry .media-card-head { min-height: 46px; }
@@ -262,9 +262,8 @@ button:focus-visible, input:focus-visible, a:focus-visible { outline: 2px solid 
   .folder-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
   .folder-card-copy { padding: 12px; }
   .media-feed { gap: 12px; }
-  .media-feed.is-masonry { columns: 2 150px; column-gap: 10px; }
+  .media-feed.is-masonry { column-gap: 10px; }
   .media-feed.is-masonry .media-shell { margin-bottom: 10px; }
-  .media-shell.is-placeholder { height: 420px !important; }
   .media-card { border-radius: 16px; }
   .media-card-head { min-height: 48px; }
   .media-card time { display: none; }
