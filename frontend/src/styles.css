@@ -251,6 +251,33 @@ button:focus-visible, input:focus-visible, a:focus-visible { outline: 2px solid 
 @keyframes loading { from { transform: translateX(-100%); } to { transform: translateX(285%); } }
 .floating-error { position: fixed; left: 50%; bottom: 24px; z-index: 50; width: min(520px, calc(100% - 32px)); transform: translateX(-50%); display: flex; justify-content: space-between; gap: 16px; padding: 14px 16px; border: 1px solid color-mix(in srgb, var(--danger) 45%, var(--line)); border-radius: 14px; background: var(--surface); color: var(--danger); box-shadow: var(--shadow); }
 .floating-error button { border: 0; background: none; color: inherit; cursor: pointer; }
+.back-to-top {
+  position: fixed;
+  right: clamp(18px, 3vw, 34px);
+  bottom: clamp(20px, 4vw, 38px);
+  z-index: 45;
+  width: 52px;
+  height: 52px;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  border: 1px solid color-mix(in srgb, var(--accent) 38%, var(--line));
+  border-radius: 17px;
+  background: color-mix(in srgb, var(--surface) 90%, transparent);
+  color: var(--text);
+  box-shadow: 0 14px 38px rgba(0, 0, 0, .22);
+  backdrop-filter: blur(14px);
+  cursor: pointer;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(18px) scale(.82) rotate(5deg);
+  transition: opacity 180ms ease, transform 280ms cubic-bezier(.2, .8, .2, 1), border-color 150ms ease, background-color 150ms ease;
+}
+.back-to-top span { display: block; font-size: 24px; line-height: 1; transform: translateY(1px); transition: transform 160ms ease; }
+.back-to-top.is-visible { opacity: 1; pointer-events: auto; transform: translateY(0) scale(1) rotate(0); }
+.back-to-top:hover { border-color: var(--accent); background: color-mix(in srgb, var(--surface) 78%, var(--accent)); }
+.back-to-top:hover span { transform: translateY(-3px); }
+.back-to-top:active { transform: translateY(2px) scale(.95); }
 .app-footer { margin-top: 80px; padding-top: 20px; display: flex; justify-content: space-between; gap: 20px; border-top: 1px solid var(--line); color: var(--muted); font-size: 11px; }
 
 @media (max-width: 720px) {
@@ -275,6 +302,7 @@ button:focus-visible, input:focus-visible, a:focus-visible { outline: 2px solid 
   .lightbox-caption { padding: 0 16px 18px; }
   .lightbox-zoom { left: 16px; top: 16px; transform: none; }
   .lightbox-zoom .zoom-fit { display: none; }
+  .back-to-top { right: 14px; bottom: 16px; width: 48px; height: 48px; border-radius: 15px; }
   .app-footer { flex-direction: column; }
 }
 

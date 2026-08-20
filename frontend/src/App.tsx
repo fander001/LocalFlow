@@ -131,7 +131,55 @@ export function App() {
 
       {loading && <div class="loading-bar" aria-label="正在加载" />}
       {error && <div class="floating-error" role="alert"><span>{error}</span><button onClick={() => setError('')}>×</button></div>}
+      <BackToTop enabled={Boolean(data?.media.length)} />
     </div>
+  );
+}
+
+function BackToTop({ enabled }: { enabled: boolean }) {
+  const [visible, setVisible] = useState(false);
+
+  useEffect(() => {
+    if (!enabled) {
+      setVisible(false);
+      return;
+    }
+
+    let frame = 0;
+    const update = () => {
+      frame = 0;
+      setVisible(window.scrollY >= window.innerHeight);
+    };
+    const onScroll = () => {
+      if (!frame) frame = window.requestAnimationFrame(update);
+    };
+
+    update();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll);
+    return () => {
+      window.removeEventListener('scroll', onScroll);
+      window.removeEventListener('resize', onScroll);
+      if (frame) window.cancelAnimationFrame(frame);
+    };
+  }, [enabled]);
+
+  const scrollToTop = () => {
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    window.scrollTo({ top: 0, behavior: reducedMotion ? 'auto' : 'smooth' });
+  };
+
+  return (
+    <button
+      class={`back-to-top${visible ? ' is-visible' : ''}`}
+      onClick={scrollToTop}
+      aria-label="回到顶部"
+      aria-hidden={!visible}
+      disabled={!visible}
+      tabIndex={visible ? 0 : -1}
+    >
+      <span aria-hidden="true">↑</span>
+    </button>
   );
 }
 
